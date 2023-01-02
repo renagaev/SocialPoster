@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SocialPoster.ImageProviders;
+using SocialPoster.Instagram;
 using SocialPoster.Jobs;
 using SocialPoster.Models;
 using SocialPoster.Storage;
@@ -12,6 +13,7 @@ services.AddDbContext<AppDbContext>(o => o.UseNpgsql(config["DbConnectionString"
 
 services.AddImageProviders();
 services.AddJobs(config);
+services.AddInstagramServices();
 
 services.Configure<QuotesJobOptions>(config.GetSection("Quotes"));
 services.Configure<QuotesJobOptions>(config.GetSection("Verses"));
