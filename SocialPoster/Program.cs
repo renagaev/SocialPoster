@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Quartz;
 using SocialPoster.ImageProviders;
 using SocialPoster.Instagram;
 using SocialPoster.Jobs;
@@ -23,7 +25,11 @@ services.Configure<VersesJobOptions>(config.GetSection("Verses"));
 
 var app = builder.Build();
 
-
 app.MapGet("/", () => "Hello World!");
+app.MapPost("/trigger", async ([FromQuery] string name, [FromServices] ISchedulerFactory schedulerFactory) =>
+{
+    var scheduler = await schedulerFactory.GetScheduler();
+    await scheduler.TriggerJob(new JobKey(name));
+});
 
 app.Run();

@@ -33,9 +33,9 @@ public class InstagramVerseJob : IJob
     public async Task Execute(IJobExecutionContext context)
     {
         var quote = await _quoteService.GetUnpostedQuote(QuoteType.GenericBibleVerse);
-        //var uploader = await _instagramProvider.GetUploader(_options.Username);
-        await UploadRnBiblePost(quote, null);
-        //await UploadRnBibleStories(quote, uploader);
+        var uploader = await _instagramProvider.GetUploader(_options.Username);
+        await UploadRnBiblePost(quote, uploader);
+        await UploadRnBibleStories(quote, uploader);
     }
 
     private async Task UploadRnBibleStories(QuoteDto quote, IInstagramUploader uploader)
@@ -53,8 +53,6 @@ public class InstagramVerseJob : IJob
         var background = await _squareImageProvider.GetImage();
         var drawed = new PostCenterImageDrawer().DrawQuote(background, quote, font);
         await drawed.SaveAsJpegAsync("image.jpeg");
-        return;
-        await uploader.UploadPost(drawed,
-            $"{quote.Text}\n{quote.Author}\n{string.Join("\n", Enumerable.Repeat(".", 6))}\n{tags}");
+        await uploader.UploadPost(drawed, $"{quote.Text}\n{quote.Author}\n{string.Join("\n", Enumerable.Repeat(".", 6))}\n{tags}");
     }
 }
