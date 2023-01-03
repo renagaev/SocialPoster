@@ -5,6 +5,7 @@ using SocialPoster.ImageProviders;
 using SocialPoster.Instagram;
 using SocialPoster.Models;
 using SocialPoster.Services;
+using SocialPoster.Storage;
 
 namespace SocialPoster.Jobs;
 

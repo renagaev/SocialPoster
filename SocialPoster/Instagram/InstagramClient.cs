@@ -1,4 +1,7 @@
-﻿namespace SocialPoster.Instagram;
+﻿
+using System.Net.Http.Headers;
+
+namespace SocialPoster.Instagram;
 
 public class InstagramClient
 {
@@ -23,25 +26,32 @@ public class InstagramClient
             ["sessionid"] = sessionId,
             ["settings"] = settingsJson
         });
-        await _client.PostAsync("/auth/settings/set", content);
+        var res = await _client.PostAsync("/auth/settings/set", content);
+        var resContent = await res.Content.ReadAsStringAsync();
+        res.EnsureSuccessStatusCode();
     }
 
     public async Task UploadPost(string sessionId, byte[] image, string caption)
     {
         var content = new MultipartFormDataContent();
-        content.Add(new StringContent(sessionId), "sessionId");
-        content.Add(new StringContent(caption), "caption");
-        content.Add(new ByteArrayContent(image), "file");
+        var imageContent = new ByteArrayContent(image);
+        imageContent.Headers.ContentType = MediaTypeHeaderValue.Parse("image/jpeg");
 
-        await _client.PostAsync("/photo/upload", content);
+        content.Add(new StringContent(sessionId), "sessionid");
+        content.Add(new StringContent(caption), "caption");
+        content.Add(imageContent, "file", "image.jpeg");
+
+        var res = await _client.PostAsync("/photo/upload", content);
+        var resContent = await res.Content.ReadAsStringAsync();
+        res.EnsureSuccessStatusCode();
     }
 
     public async Task UploadStory(string sessionId, byte[] image, string caption)
     {
         var content = new MultipartFormDataContent();
-        content.Add(new StringContent(sessionId), "sessionId");
+        content.Add(new StringContent(sessionId), "sessionid");
         content.Add(new StringContent(caption), "caption");
-        content.Add(new ByteArrayContent(image), "file");
+        content.Add(new ByteArrayContent(image), "file", "image.jpeg");
 
         await _client.PostAsync("/photo/upload_to_story", content);
     }

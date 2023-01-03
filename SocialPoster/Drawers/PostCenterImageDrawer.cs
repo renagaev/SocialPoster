@@ -27,7 +27,8 @@ public class PostCenterImageDrawer : IDrawer
                 ctx.DrawText(new TextOptions(font)
                 {
                     Origin = new PointF(center, (float)(height * 0.1)),
-                    HorizontalAlignment = HorizontalAlignment.Center,
+                    TextAlignment = TextAlignment.Center,   
+                    HorizontalAlignment = HorizontalAlignment.Center
                 }, wrapped, Color.White);
 
 

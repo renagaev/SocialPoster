@@ -1,12 +1,5 @@
 ﻿namespace SocialPoster.Models;
 
-public enum QuoteType
-{
-    GenericBibleVerse = 1,
-    PrayBibleVerse,
-    ChristianQuote
-}
-
 public class QuoteDto
 {
     public string Text { get; }

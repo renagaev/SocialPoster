@@ -20,7 +20,7 @@ public class InstagramProvider : IInstagramProvider
         if (account == null)
             throw new Exception("account not found");
 
-        await _instagramClient.SetSettings("", account.Settings);
+        await _instagramClient.SetSettings(null, account.Settings);
         return new InstagramUploader(_instagramClient, account.SessionId);
     }
 }

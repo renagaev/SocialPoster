@@ -12,8 +12,8 @@ public static class Entry
 
             void AddJob<T>(string cron) where T : IJob
             {
-                var key = new JobKey(Guid.NewGuid().ToString());
-                q.AddJob<T>(key);
+                var key = new JobKey(typeof(T).FullName);
+                q.AddJob<T>(key, o => o.StoreDurably());
                 q.AddTrigger(o => o.ForJob(key).WithCronSchedule(cron));
             }
 

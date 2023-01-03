@@ -1,32 +1,24 @@
-﻿using System.Data;
-using Dapper;
+﻿using Microsoft.EntityFrameworkCore;
 using SocialPoster.Models;
+using SocialPoster.Storage;
 
 namespace SocialPoster.Services;
 
 public class QuoteService
 {
-    private readonly IDbConnection _connection;
+    private readonly AppDbContext _dbContext;
 
-    public QuoteService(IDbConnection connection)
+    public QuoteService(AppDbContext dbContext)
     {
-        _connection = connection;
+        _dbContext = dbContext;
     }
 
     public async Task<QuoteDto> GetUnpostedQuote(QuoteType type)
     {
-        var res = await _connection.QueryFirstAsync<Quote>("select * from quotes where type = @type and not posted order by random()",
-            new {type});
-        // await _connection.ExecuteAsync("update quotes set posted = true where id = @id", new {id = res.Id});
-        return new QuoteDto(res.Text, res.Author);
+        var entity = await _dbContext.Set<QuoteEntity>().AsQueryable()
+            .Where(x => x.Type == type)
+            .OrderBy(x => EF.Functions.Random())
+            .FirstAsync();
+        return new QuoteDto(entity.Text, entity.Author);
     }
-}
-
-public class Quote
-{
-    public int Id { get; set; }
-    public string Text { get; set; }
-    public string Author { get; set; }
-    public QuoteType Type { get; set; }
-    public bool Posted { get; set; }
 }

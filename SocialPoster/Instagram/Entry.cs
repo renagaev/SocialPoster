@@ -2,10 +2,13 @@
 
 public static class Entry
 {
-    public static IServiceCollection AddInstagramServices(this IServiceCollection services)
+    public static IServiceCollection AddInstagramServices(this IServiceCollection services, string apiUrl)
     {
-        services.AddSingleton<IInstagramProvider, InstagramProvider>();
-        services.AddSingleton<InstagramClient>();
+        services.AddHttpClient<InstagramClient>(cl =>
+        {
+            cl.BaseAddress = new Uri(apiUrl);
+        });
+        services.AddScoped<IInstagramProvider, InstagramProvider>();
         return services;
     }
 }
