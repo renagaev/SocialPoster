@@ -39,11 +39,12 @@ jobs:
           script: |
             docker pull ${{ env.image_tag }}
             docker stop ${{ env.container_name }} || true && docker rm ${{ env.container_name }} || true
-            docker run -d --name ${{ env.container_name }} \
-              --env DbConnectionString="${{ secrets.DB }}" \
-              --env UnsplashCollectionId="${{ secrets.UNSPLASH_ID }}" \
-              --env InstagrapiUrl="${{ secrets.INSTAGRAPI_URL }}" \
-              --env Quotes__Username="${{ secrets.QUOTES_USERNAME }}" \
-              --env Verses__Username="${{ secrets.VERSES_USERNAME }}" \
-              -p ${{ secrets.APP_PORT }}:80 \
+            docker run -d --name ${{ env.container_name }}             \
+              --env DbConnectionString="${{ secrets.DB }}"             \
+              --env UnsplashCollectionId="${{ secrets.UNSPLASH_ID }}"  \
+              --env InstagrapiUrl="${{ secrets.INSTAGRAPI_URL }}"      \
+              --env Quotes__Username="${{ secrets.QUOTES_USERNAME }}"  \
+              --env Verses__Username="${{ secrets.VERSES_USERNAME }}"  \
+              --restart=always                                         \
+              -p ${{ secrets.APP_PORT }}:80                            \
               ${{ env.image_tag }} 
