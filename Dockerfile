@@ -19,4 +19,5 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 EXPOSE 80
 ENV ASPNETCORE_URLS http://0.0.0.0:80
+ENV TZ=Europe/Moscow
 ENTRYPOINT ["dotnet", "SocialPoster.dll"]
