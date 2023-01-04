@@ -14,7 +14,10 @@ public static class Entry
             {
                 var key = new JobKey(name);
                 q.AddJob<T>(key, o => o.StoreDurably());
-                q.AddTrigger(o => o.ForJob(key).WithCronSchedule(cron));
+                q.AddTrigger(o => o
+                    .ForJob(key)
+                    .WithCronSchedule(cron)
+                    .WithIdentity(new TriggerKey(name)));
             }
 
             AddJob<InstagramVerseJob>(config["Verses:Cron"]!, "verse");
